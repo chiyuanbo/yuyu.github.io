@@ -1,0 +1,210 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Hadoop单机安装"><meta name="keywords" content="作者：YuanBo-Chi"><meta name="author" content="YB-Chi,undefined"><meta name="copyright" content="YB-Chi"><title>Hadoop单机安装 | YB-Chi</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.3"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  localSearch: {"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}"},"path":"search.xml"}
+} </script></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备软件"><span class="toc-number">1.</span> <span class="toc-text">准备软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装步奏"><span class="toc-number">2.</span> <span class="toc-text">安装步奏</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装jdk"><span class="toc-number">2.1.</span> <span class="toc-text">安装jdk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装SSH、配置SSH无密码登陆"><span class="toc-number">2.2.</span> <span class="toc-text">安装SSH、配置SSH无密码登陆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装Hadoop"><span class="toc-number">2.3.</span> <span class="toc-text">安装Hadoop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动YARN"><span class="toc-number">2.4.</span> <span class="toc-text">启动YARN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#同样的，关闭-YARN-的脚本如下："><span class="toc-number">2.5.</span> <span class="toc-text">同样的，关闭 YARN 的脚本如下：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置变量"><span class="toc-number">3.</span> <span class="toc-text">配置变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令整理"><span class="toc-number">4.</span> <span class="toc-text">命令整理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#开启"><span class="toc-number">4.1.</span> <span class="toc-text">开启</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#开启-NaneNode-和-DataNode-守护进程："><span class="toc-number">4.1.1.</span> <span class="toc-text">开启 NaneNode 和 DataNode 守护进程：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动-YARN（需要先执行过-sbin-start-dfs-sh）："><span class="toc-number">4.1.2.</span> <span class="toc-text">启动 YARN（需要先执行过 ./sbin/start-dfs.sh）：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭"><span class="toc-number">4.2.</span> <span class="toc-text">关闭</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭-YARN"><span class="toc-number">4.2.1.</span> <span class="toc-text">关闭 YARN</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭-Hadoop"><span class="toc-number">4.2.2.</span> <span class="toc-text">关闭 Hadoop</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">YB-Chi</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">35</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://osapnihnq.bkt.clouddn.com/blog/180428/0GDEA8hFH0.jpg?imageslim)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">YB-Chi</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Hadoop单机安装</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-05-02</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div id="post-content"><p>[toc]</p>
+<h3 id="准备软件"><a href="#准备软件" class="headerlink" title="准备软件"></a>准备软件</h3><pre><code>jdk-7u80-linux-x64.tar.gz,hadoop-2.6.4.tar.gz
+</code></pre><h3 id="安装步奏"><a href="#安装步奏" class="headerlink" title="安装步奏"></a>安装步奏</h3><h4 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h4><p>配置jdk要先卸载centos自带的openjdk<br>先查看 rpm -qa | grep java<br>显示如下信息：</p>
+<pre><code>[root@localhost /]# rpm -qa | grep java
+java-1.8.0-openjdk-headless-1.8.0.65-3.b17.el7.x86_64
+javapackages-tools-3.4.1-11.el7.noarch
+java-1.8.0-openjdk-1.8.0.65-3.b17.el7.x86_64
+tzdata-java-2015g-1.el7.noarch
+java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64
+java-1.7.0-openjdk-headless-1.7.0.91-2.6.2.3.el7.x86_64
+python-javapackages-3.4.1-11.el7.noarch
+</code></pre><p>卸载</p>
+<pre><code>rpm -e --nodeps java-1.8.0-openjdk-headless-1.8.0.65-3.b17.el7.x86_64
+rpm -e --nodeps java-1.8.0-openjdk-1.8.0.65-3.b17.el7.x86_64
+rpm -e --nodeps java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64
+rpm -e --nodeps java-1.7.0-openjdk-headless-1.7.0.91-2.6.2.3.el7.x86_64
+</code></pre><p>解压jdk并配置环境变量</p>
+<pre><code>vim /etc/profile
+在最后添加
+JAVA_HOME=/usr/local/jdk_1.7
+PATH=$PATH:$JAVA_HOME/bin:
+CLASSPATH=.:$JAVA_HOME/lib
+export JAVA_HOME  PATH CLASSPATH
+</code></pre><h4 id="安装SSH、配置SSH无密码登陆"><a href="#安装SSH、配置SSH无密码登陆" class="headerlink" title="安装SSH、配置SSH无密码登陆"></a>安装SSH、配置SSH无密码登陆</h4><pre><code>执行如下命令进行检验：
+[spark@localhost ~]$ rpm -qa | grep ssh
+openssh-6.6.1p1-22.el7.x86_64
+libssh2-1.4.3-10.el7.x86_64
+openssh-server-6.6.1p1-22.el7.x86_64
+openssh-clients-6.6.1p1-22.el7.x86_64
+此时是已经安装了
+</code></pre><p>若需要安装，则可以通过 yum 进行安装（安装过程中会让你输入 [y/N]，输入 y 即可）：</p>
+<pre><code>sudo yum install openssh-clients
+sudo yum install openssh-server
+</code></pre><p>接着执行如下命令测试一下 SSH 是否可用：</p>
+<pre><code>[spark@localhost ~]$ ssh localhost
+spark@localhost&apos;s password: 
+Last login: Tue Feb  7 23:34:34 2017 from 192.168.15.1
+-bash: : No such file or directory
+</code></pre><p>但这样登陆是需要每次输入密码的，我们需要配置成SSH无密码登陆比较方便。</p>
+<p>首先输入 exit 退出刚才的 ssh，就回到了我们原先的终端窗口，然后利用 ssh-keygen 生成密钥，并将密钥加入到授权中：</p>
+<pre><code>[spark@localhost ~]$ exit# 退出刚才的 ssh localhost
+logout
+Connection to localhost closed.
+
+[spark@localhost ~]$ cd ~/.ssh/# 若没有该目录，请先执行一次ssh localhost
+[spark@localhost .ssh]$ ls
+known_hosts
+
+[spark@localhost .ssh]$ ssh-keygen -t rsa# 会有提示，都按回车就可以
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/spark/.ssh/id_rsa):    
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/spark/.ssh/id_rsa.
+Your public key has been saved in /home/spark/.ssh/id_rsa.pub.
+The key fingerprint is:
+23:b2:30:77:8a:33:d8:93:84:c4:3a:57:4b:3e:bb:d4 spark@localhost.localdomain
+The key&apos;s randomart image is:
++--[ RSA 2048]----+
+|                 |
+|.                |
+| o  o            |
+|o. + .           |
+|+ = * o S        |
+| * * O . .       |
+|. B = E          |
+|   = .           |
+|    .            |
++-----------------+
+
+[spark@localhost .ssh]$ cat id_rsa.pub &gt;&gt; authorized_keys# 加入授权
+[spark@localhost .ssh]$ chmod 600 ./authorized_keys# 修改文件权限
+在 Linux 系统中，~ 代表的是用户的主文件夹，即 “/home/用户名” 这个目录，如你的用户名为 hadoop，则 ~ 就代表 “/home/hadoop/”
+[spark@localhost .ssh]$ pwd
+/home/spark/.ssh
+</code></pre><p>此时再用 ssh localhost 命令，无需输入密码就可以直接登陆了</p>
+<pre><code>[spark@localhost .ssh]$ ssh localhost
+Last login: Tue Feb  7 23:35:12 2017 from localhost
+-bash: : No such file or directory
+[spark@localhost ~]$ exit
+logout
+Connection to localhost closed. 
+</code></pre><h4 id="安装Hadoop"><a href="#安装Hadoop" class="headerlink" title="安装Hadoop"></a>安装Hadoop</h4><p>Hadoop 解压后即可使用。输入如下命令来检查 Hadoop 是否可用，成功则会显示 Hadoop 版本信息：</p>
+<pre><code>更改文件夹名方便配置文件
+mv hadoop-2.6.4 hadoop
+
+cd /usr/local/hadoop
+./bin/hadoop version
+</code></pre><p>设置 HADOOP 环境变量    </p>
+<pre><code>vim /etc/profile
+# Hadoop Environment Variables
+export HADOOP_HOME=/usr/local/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin    
+</code></pre><p>执行如下命令使配置生效</p>
+<pre><code>source /etc/profile 
+</code></pre><p>修改配置文件 core-site.xml</p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+        &lt;value&gt;file:/usr/local/hadoop/tmp&lt;/value&gt;
+        &lt;description&gt;Abase for other temporary directories.&lt;/description&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.defaultFS&lt;/name&gt;
+        &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><p>修改配置文件 hdfs-site.xml</p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.replication&lt;/name&gt;
+        &lt;value&gt;1&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;
+        &lt;value&gt;file:/usr/local/hadoop/tmp/dfs/name&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;
+        &lt;value&gt;file:/usr/local/hadoop/tmp/dfs/data&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><p>配置完成后，执行 NameNode 的格式化:</p>
+<pre><code>./bin/hdfs namenode -format
+ 成功的话，会看到 “successfully formatted” 和 “Exitting with status 0” 的提示，
+ 若为 “Exitting with status 1” 则是出错。
+</code></pre><p><img src="https://ooo.0o0.ooo/2017/06/06/59366587664c1.png" alt="下载.png"></p>
+<p>==接着开启 NaneNode 和 DataNode 守护进程：==</p>
+<pre><code>./sbin/start-dfs.sh
+若出现如下 SSH 的提示 “Are you sure you want to continue connecting”，输入 yes 即可。
+localhost: Error: JAVA_HOME is not set and could not be found.
+
+修改/etc/hadoop/hadoop-env.sh中设JAVA_HOME
+export JAVA_HOME=/usr/local/jdk_1.7 
+</code></pre><p>启动完成后，可以通过命令 jps 来判断是否成功启动，若成功启动则会列出如下进程: “NameNode”、”DataNode”和SecondaryNameNode（如果 SecondaryNameNode 没有启动，请运行 sbin/stop-dfs.sh 关闭进程，然后再次尝试启动尝试）。如果没有 NameNode 或 DataNode ，那就是配置不成功，请仔细检查之前步骤，或通过查看启动日志排查原因。</p>
+<p><img src="https://ooo.0o0.ooo/2017/06/06/5936658795db5.png" alt="下载 (2).png"></p>
+<p>==通过查看启动日志分析启动失败原因==<br>有时 Hadoop 无法正确启动，如 NameNode 进程没有顺利启动，这时可以查看启动日志来排查原因，注意几点：</p>
+<pre><code>启动时会提示形如 “dblab: starting namenode, logging to /usr/local/hadoop/logs/hadoop-hadoop-namenode-dblab.out”，其中 dblab 对应你的主机名，但启动的日志信息是记录在 /usr/local/hadoop/logs/hadoop-hadoop-namenode-dblab.log 中，所以应该查看这个后缀为 .log 的文件；
+每一次的启动日志都是追加在日志文件之后，所以得拉到最后面看，看下记录的时间就知道了。
+一般出错的提示在最后面，也就是写着 Fatal、Error 或者 Java Exception 的地方。
+可以在网上搜索一下出错信息，看能否找到一些相关的解决方法。
+</code></pre><p>上面的单机模式，grep 例子读取的是本地数据，伪分布式读取的则是 HDFS 上的数据。要使用 HDFS，首先需要在 HDFS 中创建用户目录：</p>
+<pre><code>./bin/hdfs dfs -mkdir -p /user/spark
+</code></pre><p>接着将 ./etc/hadoop 中的 xml 文件作为输入文件复制到分布式文件系统中，即将 /usr/local/hadoop/etc/hadoop 复制到分布式文件系统中的 /user/hadoop/input 中。我们使用的是 spark 用户，并且已创建相应的用户目录 /user/spark ，因此在命令中就可以使用相对路径如 input，其对应的绝对路径就是 /user/spark/input:</p>
+<pre><code>./bin/hdfs dfs -mkdir /user/spark/input
+./bin/hdfs dfs -put ./etc/hadoop/*.xml /user/spark/input
+</code></pre><p>复制完成后，可以通过如下命令查看 HDFS 中的文件列表：</p>
+<pre><code>./bin/hdfs dfs -ls /user/spark/input
+</code></pre><p><img src="https://ooo.0o0.ooo/2017/06/06/593665887edf2.png" alt="下载 (3).png"></p>
+<p>我们也可以将运行结果取回到本地：</p>
+<pre><code>rm -r ./output    # 先删除本地的 output 文件夹（如果存在）
+./bin/hdfs dfs -get /user/spark/output ./output     # 将 HDFS 上的 output 文件夹拷贝到本机
+cat ./output/*
+</code></pre><p>Hadoop 运行程序时，输出目录不能存在，否则会提示错误 “org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://localhost:9000/user/hadoop/output already exists” ，因此若要再次执行，需要执行如下命令删除 output 文件夹:<br>​<br>    ./bin/hdfs dfs -rm -r /user/spark/output    # 删除 output 文件夹<br>运行程序时，输出目录不能存在</p>
+<p>运行 Hadoop 程序时，为了防止覆盖结果，程序指定的输出目录（如 output）不能存在，否则会提示错误，因此运行前需要先删除输出目录。在实际开发应用程序时，可考虑在程序中加上如下代码，能在每次运行时自动删除输出目录，避免繁琐的命令行操作：<br>​<br>    Configuration conf = new Configuration();<br>    Job job = new Job(conf);</p>
+<pre><code>/* 删除输出目录 */
+Path outputPath = new Path(args[1]);
+outputPath.getFileSystem(conf).delete(outputPath, true);        
+</code></pre><p>==若要关闭 Hadoop，则运行==</p>
+<pre><code>./sbin/stop-dfs.sh
+</code></pre><h4 id="启动YARN"><a href="#启动YARN" class="headerlink" title="启动YARN"></a>启动YARN</h4><p>有的读者可能会疑惑，怎么启动 Hadoop 后，见不到书上所说的 JobTracker 和 TaskTracker，<br>这是因为新版的 Hadoop 使用了新的 MapReduce 框架（MapReduce V2，<br>也称为 YARN，Yet Another Resource Negotiator）。<br>YARN 是从 MapReduce 中分离出来的，负责资源管理与任务调度。<br>YARN 运行于 MapReduce 之上，提供了高可用性、高扩展性，YARN 的更多介绍在此不展开，有兴趣的可查阅相关资料。<br>上述通过 ./sbin/start-dfs.sh 启动 Hadoop，仅仅是启动了 MapReduce 环境，我们可以启动 YARN ，让 YARN 来负责资源管理与任务调度。<br>首先修改配置文件 mapred-site.xml，这边需要先进行重命名：</p>
+<pre><code>mv ./etc/hadoop/mapred-site.xml.template ./etc/hadoop/mapred-site.xml
+</code></pre><p>然后再进行编辑，vim ./etc/hadoop/mapred-site.xml ： </p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+        &lt;value&gt;yarn&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration
+</code></pre><p>接着修改配置文件 yarn-site.xml：    </p>
+<pre><code>vim ./etc/hadoop/yarn-site.xml 
+
+&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
+        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
+     &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><p>==然后就可以启动 YARN 了（需要先执行过 ./sbin/start-dfs.sh）：==</p>
+<pre><code>./sbin/start-yarn.sh      $ 启动YARN
+./sbin/mr-jobhistory-daemon.sh start historyserver  # 开启历史服务器，才能在Web中查看任务运行情况
+</code></pre><p><img src="https://ooo.0o0.ooo/2017/06/06/59366587944ed.png" alt="下载 (4).png"></p>
+<p>启动 YARN 之后，运行实例的方法还是一样的，仅仅是资源管理方式、任务调度不同。<br>观察日志信息可以发现，不启用 YARN 时，是 “mapred.LocalJobRunner” 在跑任务，<br>启用 YARN 之后，是 “mapred.YARNRunner” 在跑任务。<br>启动 YARN 有个好处是可以通过 Web 界面查看任务的运行情况：<a href="http://192.168.15.131:8088/cluster，如下图所示。" target="_blank" rel="noopener">http://192.168.15.131:8088/cluster，如下图所示。</a></p>
+<p><img src="https://ooo.0o0.ooo/2017/06/06/59366589dcbf1.png" alt="下载 (5).png"></p>
+<p>但 YARN 主要是为集群提供更好的资源管理与任务调度，然而这在单机上体现不出价值，反而会使程序跑得稍慢些。因此在单机上是否开启 YARN 就看实际情况了。<br>==不启动 YARN 需重命名 mapred-site.xml==</p>
+<p>如果不想启动 YARN，务必把配置文件 mapred-site.xml 重命名，<br>改成 mapred-site.xml.template，需要用时改回来就行。否则在该配置文件存在，<br>而未开启 YARN 的情况下，运行程序会提示 “Retrying connect to server: 0.0.0.0/0.0.0.0:8032” 的错误，<br>这也是为何该配置文件初始文件名为 mapred-site.xml.template。</p>
+<h4 id="同样的，关闭-YARN-的脚本如下："><a href="#同样的，关闭-YARN-的脚本如下：" class="headerlink" title="同样的，关闭 YARN 的脚本如下："></a>同样的，关闭 YARN 的脚本如下：</h4><pre><code>./sbin/stop-yarn.sh
+./sbin/mr-jobhistory-daemon.sh stop historyserver
+</code></pre><h3 id="配置变量"><a href="#配置变量" class="headerlink" title="配置变量"></a>配置变量</h3><p>在前面我们设置 HADOOP 环境变量时，我们已经顺便设置了 PATH 变量</p>
+<pre><code>（即 “export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin”），
+</code></pre><p>那么以后我们在任意目录中都可以直接通过执行start-dfs.sh 来启动 Hadoop 或者<br>执行 hdfs dfs -ls input 查看 HDFS 文件了，执行 hdfs dfs -ls input 试试看。</p>
+<h3 id="命令整理"><a href="#命令整理" class="headerlink" title="命令整理"></a>命令整理</h3><h4 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h4><h5 id="开启-NaneNode-和-DataNode-守护进程："><a href="#开启-NaneNode-和-DataNode-守护进程：" class="headerlink" title="开启 NaneNode 和 DataNode 守护进程："></a>开启 NaneNode 和 DataNode 守护进程：</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sbin/start-dfs.sh</span><br></pre></td></tr></table></figure>
+<h5 id="启动-YARN（需要先执行过-sbin-start-dfs-sh）："><a href="#启动-YARN（需要先执行过-sbin-start-dfs-sh）：" class="headerlink" title="启动 YARN（需要先执行过 ./sbin/start-dfs.sh）："></a>启动 YARN（需要先执行过 ./sbin/start-dfs.sh）：</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./sbin/start-yarn.sh      $ 启动YARN</span><br><span class="line">./sbin/mr-jobhistory-daemon.sh start historyserver  <span class="comment"># 开启历史服务器，才能在Web中查看任务运行情况</span></span><br></pre></td></tr></table></figure>
+<h4 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h4><h5 id="关闭-YARN"><a href="#关闭-YARN" class="headerlink" title="关闭 YARN"></a>关闭 YARN</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./sbin/stop-yarn.sh</span><br><span class="line">./sbin/mr-jobhistory-daemon.sh stop historyserver</span><br></pre></td></tr></table></figure>
+<h5 id="关闭-Hadoop"><a href="#关闭-Hadoop" class="headerlink" title="关闭 Hadoop"></a>关闭 Hadoop</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sbin/stop-dfs.sh</span><br></pre></td></tr></table></figure></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">YB-Chi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/05/02/Hadoop单机安装/">http://yoursite.com/2018/05/02/Hadoop单机安装/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/作者：YuanBo-Chi/">作者：YuanBo-Chi</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/05/02/Kafka总结/"><i class="fa fa-chevron-left">  </i><span>Kafka总结</span></a></div><div class="next-post pull-right"><a href="/2018/05/02/Hadoop群集安装（未写完）/"><span>Hadoop群集安装（未写完）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2018 By YB-Chi</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.5.3"></script><script src="/js/fancybox.js?version=1.5.3"></script><script src="/js/sidebar.js?version=1.5.3"></script><script src="/js/copy.js?version=1.5.3"></script><script src="/js/fireworks.js?version=1.5.3"></script><script src="/js/transition.js?version=1.5.3"></script><script src="/js/scroll.js?version=1.5.3"></script><script src="/js/head.js?version=1.5.3"></script></body></html>

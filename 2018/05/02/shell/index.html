@@ -1,0 +1,136 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="shell"><meta name="keywords" content=""><meta name="author" content="YB-Chi,undefined"><meta name="copyright" content="YB-Chi"><title>shell | YB-Chi</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.3"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  localSearch: {"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}"},"path":"search.xml"}
+} </script></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#jdbc连接hive"><span class="toc-number">1.</span> <span class="toc-text">jdbc连接hive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接Phoenix"><span class="toc-number">2.</span> <span class="toc-text">连接Phoenix</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ls-l排序"><span class="toc-number">3.</span> <span class="toc-text">ls -l排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查询可执行文件命令"><span class="toc-number">4.</span> <span class="toc-text">查询可执行文件命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#给SecureCRT安装上传和下载的工具"><span class="toc-number">5.</span> <span class="toc-text">给SecureCRT安装上传和下载的工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#centos7开机模式"><span class="toc-number">6.</span> <span class="toc-text">centos7开机模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#切换用户"><span class="toc-number">7.</span> <span class="toc-text">切换用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无法用yum安装"><span class="toc-number">8.</span> <span class="toc-text">无法用yum安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rz上传不成功-was-skipped"><span class="toc-number">9.</span> <span class="toc-text">rz上传不成功 *was skipped</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用tar命令解压-zip文件的时候，遇到如下异常"><span class="toc-number">10.</span> <span class="toc-text">使用tar命令解压.zip文件的时候，遇到如下异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置变量的三种方法"><span class="toc-number">11.</span> <span class="toc-text">设置变量的三种方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加用户-赋予root权"><span class="toc-number">12.</span> <span class="toc-text">添加用户 赋予root权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#防火墙"><span class="toc-number">13.</span> <span class="toc-text">防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#linux6"><span class="toc-number">13.1.</span> <span class="toc-text">linux6</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#linux7"><span class="toc-number">13.2.</span> <span class="toc-text">linux7</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#新增用户"><span class="toc-number">14.</span> <span class="toc-text">新增用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看某一端口的占用情况：-lsof-i-端口号"><span class="toc-number">15.</span> <span class="toc-text">查看某一端口的占用情况： lsof -i:端口号</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">YB-Chi</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">35</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://osapnihnq.bkt.clouddn.com/blog/180428/0GDEA8hFH0.jpg?imageslim)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">YB-Chi</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">shell</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-05-02</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div id="post-content"><p>==作者：YuanBo-Chi==</p>
+<p>[toc]</p>
+<h4 id="jdbc连接hive"><a href="#jdbc连接hive" class="headerlink" title="jdbc连接hive"></a>jdbc连接hive</h4><p><code>beeline -u jdbc:hive2://192.168.6.1:10009 -n yarn</code></p>
+<h4 id="连接Phoenix"><a href="#连接Phoenix" class="headerlink" title="连接Phoenix"></a>连接Phoenix</h4><p><code>sqlline.py localhost可以进入phoenix shell   然后   !tables查看表</code></p>
+<h4 id="ls-l排序"><a href="#ls-l排序" class="headerlink" title="ls -l排序"></a>ls -l排序</h4><pre><code>按大小排序
+[root@localhost ~]# ll -Sh 
+
+按时间排序
+
+[root@localhost ~]# ll -rt
+
+
+ll －t 是降序， ll －t ｜ tac 是升序
+</code></pre><h4 id="查询可执行文件命令"><a href="#查询可执行文件命令" class="headerlink" title="查询可执行文件命令"></a>查询可执行文件命令</h4><pre><code>which eclipse
+想要在xstar上执行eclipse的话如果有变量直接eclipse就可以了
+</code></pre><h4 id="给SecureCRT安装上传和下载的工具"><a href="#给SecureCRT安装上传和下载的工具" class="headerlink" title="给SecureCRT安装上传和下载的工具"></a>给SecureCRT安装上传和下载的工具</h4><pre><code>yum install lrzsz
+现在CentOS7使用systemd作为新的init系统，而systemd系统使用“target”来代替“runlevel”，默认有两个主要的target：
+
+ multi-user.target：相当于runlevel 3[命令行界面]，graphical.target：相当于runlevel 5[图形界面]
+
+设置默认的target则使用命令：
+ln -sf /lib/systemd/system/&lt;target name&gt;.target /etc/systemd/system/default.target
+
+我这里要将CentOS7开机默认进入命令行界面，则运行命令：
+ln -sf /lib/systemd/system/multi-user.target /etc/systemd/system/default.target
+</code></pre><h4 id="centos7开机模式"><a href="#centos7开机模式" class="headerlink" title="centos7开机模式"></a>centos7开机模式</h4><p>现在CentOS7使用systemd作为新的init系统，而systemd系统使用“target”来代替“runlevel”，默认有两个主要的target：    </p>
+<pre><code>multi-user.target：相当于runlevel 3[命令行界面]，            
+graphical.target：相当于runlevel 5[图形界面]
+
+设置默认的target则使用命令：
+ln -sf /lib/systemd/system/&lt;target name&gt;.target     
+/etc/systemd/system/default.target
+
+我这里要将CentOS7开机默认进入命令行界面，则运行命令：
+ln -sf /lib/systemd/system/multi-user.target 
+/etc/systemd/system/default.target
+</code></pre><h4 id="切换用户"><a href="#切换用户" class="headerlink" title="切换用户"></a>切换用户</h4><pre><code>su [user] 和 su - [user]的区别：
+su [user]切换到其他用户，但是不切换环境变量，su - [user]则是完整的切换到新的用户环境。
+
+如：
+
+[root@rac1 ~]# pwd  --当前目录
+/root
+[root@rac1 ~]# su oracle --使用su [user]
+[oracle@rac1 root]$ pwd  --当前目录没有改变，还是之前的用户目录
+/root
+[oracle@rac1 root]$ su - oracle --使用su - [user]
+Password:
+[oracle@rac1 ~]$ pwd   --当前目录变为当前用户的家目录
+/home/oracle
+[oracle@rac1 ~]$
+所以建议大家在切换用户时，尽量用su - [use r]，否则可能会出现环境变量不对的问题。
+</code></pre><h4 id="无法用yum安装"><a href="#无法用yum安装" class="headerlink" title="无法用yum安装"></a>无法用yum安装</h4><p>==提示：file:///mnt/cdrom/repodata/repomd.xml: [Errno 14] Could not open/read file:/ ==    </p>
+<p><img src="https://ooo.0o0.ooo/2017/06/02/5930d3cdc345d.png" alt=""><br><img src="https://ooo.0o0.ooo/2017/06/02/5930d4017be37.png" alt=""></p>
+<h4 id="rz上传不成功-was-skipped"><a href="#rz上传不成功-was-skipped" class="headerlink" title="rz上传不成功 *was skipped"></a>rz上传不成功 *was skipped</h4><p>==权限不够==</p>
+<p><img src="https://ooo.0o0.ooo/2017/06/02/5930d442c03fa.png" alt=""></p>
+<h4 id="使用tar命令解压-zip文件的时候，遇到如下异常"><a href="#使用tar命令解压-zip文件的时候，遇到如下异常" class="headerlink" title="使用tar命令解压.zip文件的时候，遇到如下异常"></a>使用tar命令解压.zip文件的时候，遇到如下异常</h4><pre><code>linuxidc@Ubuntu:~/Documents$ tar -xzvf wls1033_dev.zip
+gzip: stdin has more than one entry--rest ignored
+tar: Child returned status 2
+tar: Error is not recoverable: exiting now
+</code></pre><p>==tar命令是调用了gunzip命令的，<br>对只有一个压缩内容的文件来解压的时候才用tar， 而如果压缩包里有多个文件被压缩了，<br>tar命令不能继续工作。可以采用unzip命令去解压。<br>先查看是否已安装unzip，没有安装的话下载unzip。<br>然后解压缩：==</p>
+<pre><code>linuxidc@ubuntu:~/Documents$  unzip wls1033_dev,zip -d weblogic
+</code></pre><p>解压缩到当前文件夹下的weblogic文件夹下。</p>
+<p><img src="https://ooo.0o0.ooo/2017/06/02/5930d4430c194.png" alt=""></p>
+<h4 id="设置变量的三种方法"><a href="#设置变量的三种方法" class="headerlink" title="设置变量的三种方法"></a>设置变量的三种方法</h4><p>1) 在/etc/profile文件中添加变量【对所有用户生效（永久的）】</p>
+<p>用vi在文件/etc/profile文件中增加变量，该变量将会对Linux下所有用户有效，并且是“永久的”。</p>
+<p>例如：编辑/etc/profile文件，添加CLASSPATH变量</p>
+<pre><code>vi /etc/profile
+export CLASSPATH=.:$JAVA_HOME/lib/tools.jar;$JAVA_HOME/lib/dt.jar
+</code></pre><p>注：修改文件后要想马上生效还要运行# source /etc/profile不然只能在下次重进此用户时生效。</p>
+<p>2) 在用户目录下的.bash_profile文件中增加变量【对单一用户生效（永久的）】</p>
+<p>用VI在用户目录下的.bash_profile文件中增加变量，改变量仅会对当前用户有效，并且是“永久的”。</p>
+<p>例如：编辑li用户目录（/home/li）下的.bashrc</p>
+<pre><code>$ vi /home/li/.bashrc  
+</code></pre><p>添加如下内容：</p>
+<pre><code>export CLASSPATH=.:$JAVA_HOME/lib/tools.jar;$JAVA_HOME/lib/dt.jar
+</code></pre><p>注：修改文件后要想马上生效还要运行$ source /home/li/.bashrc不然只能在下次重进此用户时生效。</p>
+<p>3) 直接运行export命令定义变量【只对当前shell（BASH）有效（临时的）】</p>
+<p>在shell的命令行下直接使用[export变量名=变量值]定义变量，该变量只在当前的shell（BASH）或其子shell（BASH）下是有效的，shell关闭了，变量也就失效了，再打开新shell时就没有这个变量，需要使用的话还需要重新定义。</p>
+<h4 id="添加用户-赋予root权"><a href="#添加用户-赋予root权" class="headerlink" title="添加用户 赋予root权"></a>添加用户 赋予root权</h4><p>1、添加用户，首先用adduser命令添加一个普通用户，命令如下：</p>
+<pre><code>#adduser tommy
+//添加一个名为tommy的用户
+#passwd tommy   //修改密码
+Changing password for user tommy.
+New UNIX password:     //在这里输入新密码
+Retype new UNIX password:  //再次输入新密码
+passwd: all authentication tokens updated successfully.
+</code></pre><p>2、赋予root权限</p>
+<p>方法一：修改 /etc/sudoers 文件，找到下面一行，把前面的注释（#）去掉</p>
+<pre><code>Allows people in group wheel to run all commands
+%wheel    ALL=(ALL)    ALL
+</code></pre><p>然后修改用户，使其属于root组（wheel），命令如下：</p>
+<pre><code>#usermod -g root tommy
+</code></pre><p>修改完毕，现在可以用tommy帐号登录，然后用命令 su – ，即可获得root权限进行操作。</p>
+<p>方法二：修改 /etc/sudoers 文件，找到下面一行，在root下面添加一行，如下所示：</p>
+<pre><code>Allow root to run any commands anywhere
+root    ALL=(ALL)     ALL
+tommy   ALL=(ALL)     ALL
+</code></pre><p>修改完毕，现在可以用tommy帐号登录，然后用命令 sudo – ，即可获得root权限进行操作。</p>
+<p>方法三：修改 /etc/passwd 文件，找到如下行，把用户ID修改为 0 ，如下所示：</p>
+<pre><code>tommy:x:0:33:tommy:/data/webroot:/bin/bash
+</code></pre><h4 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h4><h5 id="linux6"><a href="#linux6" class="headerlink" title="linux6"></a>linux6</h5><p>1) 重启后生效</p>
+<pre><code>开启： chkconfig iptables on  
+关闭： chkconfig iptables off
+</code></pre><p>2) 即时生效，重启后失效service 方式</p>
+<pre><code>开启： service iptables start  
+关闭： service iptables stop  
+</code></pre><h5 id="linux7"><a href="#linux7" class="headerlink" title="linux7"></a>linux7</h5><p>CentOS7这个版本的防火墙默认使用的是firewall，与之前的版本使用iptables不一样。按如下方便配置防火墙：</p>
+<pre><code>1、 查看防火墙状态
+    firewall-cmd    --state
+    关闭防火墙
+    systemctl  stop   firewalld.service
+    开启防火墙
+    systemctl  start   firewalld.service
+2、关闭开机启动：systemctl disable firewalld.service
+
+3、安装iptables防火墙，执行以下命令安装iptables防火墙：yum install iptables-services  
+    开启iptables防火墙的命令是：
+    systemctl  start  iptables.service
+    重启iptables防火墙的命令是：
+    systemctl  restart  iptables.service
+    关闭iptables防火墙的命令是：
+    systemctl  stop  iptables.service
+    查看iptables防火墙状态的命令是：
+    systemctl  status  iptables.service
+</code></pre><h4 id="新增用户"><a href="#新增用户" class="headerlink" title="新增用户"></a>新增用户</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">新增用户</span><br><span class="line">[root@BDS-DATA2 kafka]<span class="comment"># useradd -g root -m yuanbo</span></span><br><span class="line">[root@BDS-DATA2 kafka]<span class="comment"># passwd yuanbo</span></span><br><span class="line">更改用户 yuanbo 的密码 。</span><br><span class="line">新的 密码：yuanbo</span><br><span class="line">无效的密码： 它基于字典单词</span><br><span class="line">无效的密码： 过于简单</span><br><span class="line">重新输入新的 密码：yuanbo</span><br><span class="line">passwd： 所有的身份验证令牌已经成功更新。</span><br><span class="line"></span><br><span class="line">修改sudo权限</span><br><span class="line">[root@BDS-CM config]<span class="comment"># vim /etc/sudoers</span></span><br><span class="line">在root    ALL=(ALL)       ALL下添加一行</span><br><span class="line">yuanbo  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure>
+<h4 id="查看某一端口的占用情况：-lsof-i-端口号"><a href="#查看某一端口的占用情况：-lsof-i-端口号" class="headerlink" title="查看某一端口的占用情况： lsof -i:端口号"></a>查看某一端口的占用情况： lsof -i:端口号</h4></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">YB-Chi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/05/02/shell/">http://yoursite.com/2018/05/02/shell/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2018/05/02/linux里挂载（mount）和取消挂载（umount）命令的使用/"><span>linux里挂载（mount）和取消挂载（umount）命令的使用</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2018 By YB-Chi</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.5.3"></script><script src="/js/fancybox.js?version=1.5.3"></script><script src="/js/sidebar.js?version=1.5.3"></script><script src="/js/copy.js?version=1.5.3"></script><script src="/js/fireworks.js?version=1.5.3"></script><script src="/js/transition.js?version=1.5.3"></script><script src="/js/scroll.js?version=1.5.3"></script><script src="/js/head.js?version=1.5.3"></script></body></html>

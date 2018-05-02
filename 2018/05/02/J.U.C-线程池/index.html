@@ -1,0 +1,47 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="J.U.C-线程池"><meta name="keywords" content="作者：YuanBo-Chi"><meta name="author" content="YB-Chi,undefined"><meta name="copyright" content="YB-Chi"><title>J.U.C-线程池 | YB-Chi</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.3"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  localSearch: {"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}"},"path":"search.xml"}
+} </script></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">YB-Chi</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">35</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://osapnihnq.bkt.clouddn.com/blog/180428/0GDEA8hFH0.jpg?imageslim)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">YB-Chi</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">J.U.C-线程池</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-05-02</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div id="post-content"><p>[TOC]</p>
+<blockquote>
+<p>下图描述的是线程池API的一部分。广义上的完整线程池可能还包括Thread/Runnable、Timer/TimerTask等部分。这里只介绍主要的和高级的API以及架构和原理。</p>
+</blockquote>
+<p><img src="http://osapnihnq.bkt.clouddn.com/blog/180122/jm79K9I6ae.png?imageslim" alt="mark"></p>
+<p>大多数并发应用程序是围绕执行任务（Task）进行管理的。所谓任务就是抽象、离散的工作单元（unit of work）。把一个应用程序的工作（work）分离到任务中，可以简化程序的管理；这种分离还在不同事物间划分了自然的分界线，可以方便程序在出现错误时进行恢复；同时这种分离还可以为并行工作提供一个自然的结构，有利于提高程序的并发性。</p>
+<p>并发执行任务的一个很重要前提是拆分任务。把一个大的过程或者任务拆分成很多小的工作单元，每一个工作单元可能相关、也可能无关，这些单元在一定程度上可以充分利用CPU的特性并发的执行，从而提高并发性（性能、响应时间、吞吐量等）。</p>
+<p>所谓的任务拆分就是确定每一个执行任务（工作单元）的边界。理想情况下独立的工作单元有最大的吞吐量，这些工作单元不依赖于其它工作单元的状态、结果或者其他资源等。因此将任务尽可能的拆分成一个个独立的工作单元有利于提高程序的并发性。</p>
+<p>对于有依赖关系以及资源竞争的工作单元就涉及到任务的调度和负载均衡。工作单元的状态、结果或者其他资源等有关联的工作单元就需要有一个总体的调度者来协调资源和执行顺序。同样在有限的资源情况下，大量的任务也需要一个协调各个工作单元的调度者。这就涉及到任务执行的策略问题。</p>
+<p>任务的执行策略包括4W3H部分：</p>
+<ul>
+<li>任务在什么（What）线程中执行</li>
+<li>任务以什么（What）顺序执行（FIFO/LIFO/优先级等）</li>
+<li>同时有多少个（How Many）任务并发执行</li>
+<li>允许有多少个（How Many）个任务进入执行队列</li>
+<li>系统过载时选择放弃哪一个（Which）任务，如何（How）通知应用程序这个动作</li>
+<li>任务执行的开始、结束应该做什么（What）处理</li>
+</ul>
+<p>在后面会详细分写这些策略是如何实现的。我们先来简单回答些如何满足上面的条件。</p>
+<ol>
+<li>首先明确一定是在Java里面可以供使用者调用的启动线程类是Thread。因此Runnable或者Timer/TimerTask等都是要依赖Thread来启动的，因此在ThreadPool里面同样也是靠Thread来启动多线程的。</li>
+<li>默认情况下Runnable接口执行完毕后是不能拿到执行结果的，因此在ThreadPool里就定义了一个Callable接口来处理执行结果。</li>
+<li>为了异步阻塞的获取结果，Future可以帮助调用线程获取执行结果。</li>
+<li>Executor解决了向线程池提交任务的入口问题，同时ScheduledExecutorService解决了如何进行重复调用任务的问题。</li>
+<li>CompletionService解决了如何按照执行完毕的顺序获取结果的问题，这在某些情况下可以提高任务执行的并发，调用线程不必在长时间任务上等待过多时间。</li>
+<li>显然线程的数量是有限的，而且也不宜过多，因此合适的任务队列是必不可少的，BlockingQueue的容量正好可以解决此问题。</li>
+<li>固定任务容量就意味着在容量满了以后需要一定的策略来处理过多的任务（新任务），RejectedExecutionHandler正好解决此问题。</li>
+<li>一定时间内阻塞就意味着有超时，因此TimeoutException就是为了描述这种现象。TimeUnit是为了描述超时时间方便的一个时间单元枚举类。</li>
+<li>有上述问题就意味了配置一个合适的线程池是很复杂的，因此Executors默认的一些线程池配置可以减少这个操作。</li>
+</ol>
+<blockquote>
+<p>Java里面线程池的顶级接口是Executor，但是严格意义上讲Executor并不是一个线程池，而只是一个执行线程的工具。真正的线程池接口是ExecutorService。</p>
+</blockquote>
+<blockquote>
+<p>下面这张图完整描述了线程池的类体系结构</p>
+</blockquote>
+<p><img src="http://osapnihnq.bkt.clouddn.com/blog/180202/KE6l6bK5im.png?imageslim" alt="mark"></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">YB-Chi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/05/02/J.U.C-线程池/">http://yoursite.com/2018/05/02/J.U.C-线程池/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/作者：YuanBo-Chi/">作者：YuanBo-Chi</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/05/02/J.U.C-原子操作/"><i class="fa fa-chevron-left">  </i><span>J.U.C-原子操作</span></a></div><div class="next-post pull-right"><a href="/2018/05/02/Java 异常处理的 9 个最佳实践/"><span>Java 异常处理的 9 个最佳实践</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2018 By YB-Chi</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.5.3"></script><script src="/js/fancybox.js?version=1.5.3"></script><script src="/js/sidebar.js?version=1.5.3"></script><script src="/js/copy.js?version=1.5.3"></script><script src="/js/fireworks.js?version=1.5.3"></script><script src="/js/transition.js?version=1.5.3"></script><script src="/js/scroll.js?version=1.5.3"></script><script src="/js/head.js?version=1.5.3"></script></body></html>
