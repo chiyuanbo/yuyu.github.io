@@ -28,7 +28,9 @@
       
         <tags>
             
-            <tag> java,Code </tag>
+            <tag> Code </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
@@ -107,13 +109,13 @@
       
         <tags>
             
-            <tag> Hadoop </tag>
-            
-            <tag> Hive </tag>
+            <tag> Java </tag>
             
             <tag> Code </tag>
             
-            <tag> Java </tag>
+            <tag> Hadoop </tag>
+            
+            <tag> Hive </tag>
             
         </tags>
       
@@ -162,7 +164,9 @@
       
         <tags>
             
-            <tag> Linux,Shell </tag>
+            <tag> Linux </tag>
+            
+            <tag> Shell </tag>
             
         </tags>
       
@@ -177,7 +181,9 @@
       
         <tags>
             
-            <tag> Linux,Shell </tag>
+            <tag> Linux </tag>
+            
+            <tag> Shell </tag>
             
         </tags>
       
@@ -192,7 +198,9 @@
       
         <tags>
             
-            <tag> java,Tomcat </tag>
+            <tag> java </tag>
+            
+            <tag> Tomcat </tag>
             
         </tags>
       
@@ -207,7 +215,9 @@
       
         <tags>
             
-            <tag> Java,J.U.C </tag>
+            <tag> Java </tag>
+            
+            <tag> J.U.C </tag>
             
         </tags>
       
@@ -222,7 +232,9 @@
       
         <tags>
             
-            <tag> Java,J.U.C </tag>
+            <tag> Java </tag>
+            
+            <tag> J.U.C </tag>
             
         </tags>
       
@@ -237,7 +249,9 @@
       
         <tags>
             
-            <tag> Java,Code </tag>
+            <tag> Java </tag>
+            
+            <tag> Code </tag>
             
         </tags>
       
@@ -388,7 +402,9 @@
       
         <tags>
             
-            <tag> Java,J.U.C </tag>
+            <tag> Java </tag>
+            
+            <tag> J.U.C </tag>
             
         </tags>
       
@@ -403,7 +419,9 @@
       
         <tags>
             
-            <tag> java,Code </tag>
+            <tag> Code </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
@@ -418,7 +436,9 @@
       
         <tags>
             
-            <tag> Java,Maven </tag>
+            <tag> Java </tag>
+            
+            <tag> Maven </tag>
             
         </tags>
       
@@ -433,7 +453,9 @@
       
         <tags>
             
-            <tag> Java,Code </tag>
+            <tag> Java </tag>
+            
+            <tag> Code </tag>
             
         </tags>
       
@@ -497,7 +519,9 @@
       
         <tags>
             
-            <tag> Java,Log </tag>
+            <tag> Java </tag>
+            
+            <tag> Log </tag>
             
         </tags>
       
@@ -512,7 +536,9 @@
       
         <tags>
             
-            <tag> Java,JVM </tag>
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -527,7 +553,9 @@
       
         <tags>
             
-            <tag> Java,JVM </tag>
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -542,7 +570,9 @@
       
         <tags>
             
-            <tag> Java,JVM </tag>
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -557,7 +587,9 @@
       
         <tags>
             
-            <tag> Java,JVM </tag>
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -572,7 +604,9 @@
       
         <tags>
             
-            <tag> Java,JVM </tag>
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -602,11 +636,11 @@
       
         <tags>
             
+            <tag> Java </tag>
+            
             <tag> Bigdata </tag>
             
             <tag> Code </tag>
-            
-            <tag> Java </tag>
             
             <tag> Spark </tag>
             
@@ -623,7 +657,9 @@
       
         <tags>
             
-            <tag> Java,Code </tag>
+            <tag> Java </tag>
+            
+            <tag> Code </tag>
             
         </tags>
       
@@ -655,7 +691,9 @@
       
         <tags>
             
-            <tag> Java,J.U.C </tag>
+            <tag> Java </tag>
+            
+            <tag> J.U.C </tag>
             
         </tags>
       
