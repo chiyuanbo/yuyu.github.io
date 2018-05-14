@@ -1,0 +1,101 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="HDFS"><meta name="keywords" content="Bigdata,Hadoop,HDFS"><meta name="author" content="YB-Chi,undefined"><meta name="copyright" content="YB-Chi"><title>HDFS | YB-Chi</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.3"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  localSearch: {"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}"},"path":"search.xml"}
+} </script></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#HDFS的工作机制"><span class="toc-number">1.</span> <span class="toc-text">HDFS的工作机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HDFS-写数据流程"><span class="toc-number">2.</span> <span class="toc-text">HDFS 写数据流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HDFS-读数据流程"><span class="toc-number">3.</span> <span class="toc-text">HDFS 读数据流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NAMENODE工作机制"><span class="toc-number">4.</span> <span class="toc-text">NAMENODE工作机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NAMENODE职责"><span class="toc-number">4.1.</span> <span class="toc-text">NAMENODE职责</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元数据管理"><span class="toc-number">4.2.</span> <span class="toc-text">元数据管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元数据存储机制"><span class="toc-number">4.3.</span> <span class="toc-text">元数据存储机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元数据手动查看"><span class="toc-number">4.4.</span> <span class="toc-text">元数据手动查看</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元数据的checkpoint"><span class="toc-number">4.5.</span> <span class="toc-text">元数据的checkpoint</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#checkpoint的详细过程"><span class="toc-number">4.6.</span> <span class="toc-text">checkpoint的详细过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#checkpoint操作的触发条件配置参数"><span class="toc-number">4.7.</span> <span class="toc-text">checkpoint操作的触发条件配置参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#checkpoint的附带作用"><span class="toc-number">4.8.</span> <span class="toc-text">checkpoint的附带作用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DATANODE的工作机制"><span class="toc-number">5.</span> <span class="toc-text">DATANODE的工作机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Datanode工作职责"><span class="toc-number">5.1.</span> <span class="toc-text">Datanode工作职责</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Datanode掉线判断时限参数"><span class="toc-number">5.2.</span> <span class="toc-text">Datanode掉线判断时限参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#观察验证DATANODE功能"><span class="toc-number">5.3.</span> <span class="toc-text">观察验证DATANODE功能</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">YB-Chi</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">50</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">24</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(http://osapnihnq.bkt.clouddn.com/blog/180428/0GDEA8hFH0.jpg?imageslim)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">YB-Chi</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">HDFS</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-05-14</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div id="post-content"><p>==作者：YB-Chi==</p>
+<p>[toc]</p>
+<h3 id="HDFS的工作机制"><a href="#HDFS的工作机制" class="headerlink" title="HDFS的工作机制"></a>HDFS的工作机制</h3><p>工作机制的学习主要是为加深对分布式系统的理解，以及增强遇到各种问题时的分析解决能力，形成一定的集群运维能力。</p>
+<p>很多不是真正理解hadoop技术体系的人会常常觉得HDFS可用于网盘类应用，但实际并非如此。要想将技术准确用在恰当的地方，必须对技术有深刻的理解。</p>
+<ol>
+<li><p>HDFS集群分为两大角色：NameNode、DataNode</p>
+</li>
+<li><p>NameNode负责管理整个文件系统的元数据（元数据就是文件数据块放置在DataNode位置和数量等信息）</p>
+</li>
+<li><p>DataNode 负责管理用户的文件数据块</p>
+</li>
+<li><p>文件会按照固定的大小（blocksize）切成若干块后分布式存储在若干台datanode上</p>
+</li>
+<li><p>每一个文件块可以有多个副本，并存放在不同的datanode上</p>
+</li>
+<li><p>Datanode会定期向Namenode汇报自身所保存的文件block信息，而namenode则会负责保持文件的副本数量</p>
+</li>
+<li><p>HDFS的内部工作机制对客户端保持透明，客户端请求访问HDFS都是通过向namenode申请来进行</p>
+</li>
+</ol>
+<h3 id="HDFS-写数据流程"><a href="#HDFS-写数据流程" class="headerlink" title="HDFS 写数据流程"></a>HDFS 写数据流程</h3><p>客户端要向HDFS写数据，首先要跟Namenode通信以确认可以写文件并获得接收文件block的Datanode，然后，客户端按顺序将文件逐个block传递给相应Datanode，并由接收到block的Datanode负责向其他Datanode复制block的副本</p>
+<p><img src="http://osapnihnq.bkt.clouddn.com/blog/180508/120CK4DfC3.png?imageslim" alt="mark"></p>
+<p>写数据步骤详解</p>
+<ol>
+<li><p>Client向Namenode通信请求上传文件，Namenode检查目标文件是否已存在，父目录是否存在</p>
+</li>
+<li><p>Namenode返回是否可以上传</p>
+</li>
+<li><p>Client请求第一个 block该传输到哪些Datanode服务器上</p>
+</li>
+<li><p>Namenode返回3个(主副本数量)Datanode服务器ABC</p>
+</li>
+<li><p>Client请求3台DataNode中的一台A上传数据（本质上是一个RPC调用，建立pipeline），A收到请求会继续调用B，然后B调用C，将整个pipeline建立完成，逐级返回客户端</p>
+</li>
+<li><p>Client开始往A上传第一个block（先从磁盘读取数据放到一个本地内存缓存），以packet为单位，A收到一个packet就会传给B，B传给C；A每传一个packet会放入一个应答队列等待应答</p>
+</li>
+<li><p>当一个block传输完成之后，Client再次请求Namenode上传第二个block的服务器。</p>
+</li>
+</ol>
+<h3 id="HDFS-读数据流程"><a href="#HDFS-读数据流程" class="headerlink" title="HDFS 读数据流程"></a>HDFS 读数据流程</h3><p>客户端将要读取的文件路径发送给namenode，namenode获取文件的元信息（主要是block的存放位置信息）返回给客户端，客户端根据返回的信息找到相应datanode逐个获取文件的block并在客户端本地进行数据追加合并从而获得整个文件</p>
+<p><img src="http://osapnihnq.bkt.clouddn.com/blog/180508/3bBgc9DeKH.png?imageslim" alt="mark"></p>
+<p>读数据步骤详解</p>
+<ol>
+<li><p>跟namenode通信查询元数据，找到文件块所在的datanode服务器</p>
+</li>
+<li><p>挑选一台datanode（就近原则，然后随机）服务器，请求建立socket流</p>
+</li>
+<li><p>datanode开始发送数据（从磁盘里面读取数据放入流，以packet为单位来做校验）</p>
+</li>
+<li><p>客户端以packet为单位接收，现在本地缓存，然后写入目标文件</p>
+</li>
+</ol>
+<h3 id="NAMENODE工作机制"><a href="#NAMENODE工作机制" class="headerlink" title="NAMENODE工作机制"></a>NAMENODE工作机制</h3><h4 id="NAMENODE职责"><a href="#NAMENODE职责" class="headerlink" title="NAMENODE职责"></a>NAMENODE职责</h4><ul>
+<li><p>负责客户端请求的响应</p>
+</li>
+<li><p>元数据的管理（查询，修改）</p>
+</li>
+</ul>
+<h4 id="元数据管理"><a href="#元数据管理" class="headerlink" title="元数据管理"></a>元数据管理</h4><p>namenode对数据的管理采用了三种存储形式：</p>
+<ul>
+<li><p>内存元数据(NameSystem)</p>
+</li>
+<li><p>磁盘元数据镜像文件</p>
+</li>
+<li><p>数据操作日志文件（可通过日志运算出元数据）</p>
+</li>
+</ul>
+<h4 id="元数据存储机制"><a href="#元数据存储机制" class="headerlink" title="元数据存储机制"></a>元数据存储机制</h4><ol>
+<li><p>内存中有一份完整的元数据(内存meta data)</p>
+</li>
+<li><p>磁盘有一个“准完整”的元数据镜像（fsimage）文件(在namenode的工作目录中)</p>
+</li>
+<li><p>用于衔接内存metadata和持久化元数据镜像fsimage之间的操作日志（edits文件）</p>
+</li>
+</ol>
+<p>注：当客户端对hdfs中的文件进行新增或者修改操作，操作记录首先被记入edits日志文件中，当客户端操作成功后，相应的元数据会更新到内存meta.data中</p>
+<h4 id="元数据手动查看"><a href="#元数据手动查看" class="headerlink" title="元数据手动查看"></a>元数据手动查看</h4><p>可以通过hdfs的一个工具来查看edits中的信息<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin/hdfs oev -i edits -o edits.xml </span><br><span class="line">bin/hdfs oiv -i fsimage_0000000000000000087 -p XML -o fsimage.xml</span><br></pre></td></tr></table></figure></p>
+<h4 id="元数据的checkpoint"><a href="#元数据的checkpoint" class="headerlink" title="元数据的checkpoint"></a>元数据的checkpoint</h4><p>每隔一段时间，会由secondary namenode将namenode上积累的所有edits和一个最新的fsimage下载到本地，并加载到内存进行merge（这个过程称为checkpoint）</p>
+<h4 id="checkpoint的详细过程"><a href="#checkpoint的详细过程" class="headerlink" title="checkpoint的详细过程"></a>checkpoint的详细过程</h4><p><img src="http://osapnihnq.bkt.clouddn.com/blog/180508/fFFcG5dbK0.png?imageslim" alt="mark"></p>
+<h4 id="checkpoint操作的触发条件配置参数"><a href="#checkpoint操作的触发条件配置参数" class="headerlink" title="checkpoint操作的触发条件配置参数"></a>checkpoint操作的触发条件配置参数</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dfs.namenode.checkpoint.check.period=<span class="number">60</span> <span class="comment">#检查触发条件是否满足的频率，60秒</span></span><br><span class="line">dfs.namenode.checkpoint.dir=file://$&#123;hadoop.tmp.dir&#125;/dfs/namesecondary</span><br><span class="line">dfs.namenode.checkpoint.edits.dir=$&#123;dfs.namenode.checkpoint.dir&#125; <span class="comment">#以上两个参数做checkpoint操作时，secondary namenode的本地工作目录</span></span><br><span class="line">dfs.namenode.checkpoint.max-retries=<span class="number">3</span> <span class="comment">#最大重试次数</span></span><br><span class="line">dfs.namenode.checkpoint.period=<span class="number">3600</span> <span class="comment">#两次checkpoint之间的时间间隔3600秒</span></span><br><span class="line">dfs.namenode.checkpoint.txns=<span class="number">1000000</span> <span class="comment">#两次checkpoint之间最大的操作记录</span></span><br></pre></td></tr></table></figure>
+<h4 id="checkpoint的附带作用"><a href="#checkpoint的附带作用" class="headerlink" title="checkpoint的附带作用"></a>checkpoint的附带作用</h4><p>namenode和secondary namenode的工作目录存储结构完全相同，所以，当namenode故障退出需要重新恢复时，可以从secondary namenode的工作目录中将fsimage拷贝到namenode的工作目录，以恢复namenode的元数据</p>
+<h3 id="DATANODE的工作机制"><a href="#DATANODE的工作机制" class="headerlink" title="DATANODE的工作机制"></a>DATANODE的工作机制</h3><h4 id="Datanode工作职责"><a href="#Datanode工作职责" class="headerlink" title="Datanode工作职责"></a>Datanode工作职责</h4><ol>
+<li>存储管理用户的文件块数据</li>
+<li>定期向namenode汇报自身所持有的block信息（通过心跳信息上报）（这点很重要，因为，当集群中发生某些block副本失效时，集群如何恢复block初始副本数量的问题）</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span>  </span><br><span class="line">	 <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.blockreport.intervalMsec<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">value</span>&gt;</span>3600000<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </span><br><span class="line">	 <span class="tag">&lt;<span class="name">description</span>&gt;</span>Determines block reporting interval in milliseconds. <span class="tag">&lt;/<span class="name">description</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="Datanode掉线判断时限参数"><a href="#Datanode掉线判断时限参数" class="headerlink" title="Datanode掉线判断时限参数"></a>Datanode掉线判断时限参数</h4><p>datanode进程死亡或者网络故障造成datanode无法与namenode通信，namenode不会立即把该节点判定为死亡，要经过一段时间，这段时间暂称作超时时长。HDFS默认的超时时长为10分钟+30秒。如果定义超时时间为timeout，则超时时长的计算公式为:</p>
+<p><strong><code>timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</code></strong></p>
+<p>而默认的heartbeat.recheck.interval 大小为5分钟，dfs.heartbeat.interval默认为3秒。<br>需要注意的是hdfs-site.xml 配置文件中的heartbeat.recheck.interval的单位为毫秒，dfs.heartbeat.interval的单位为秒。所以，举个例子，如果heartbeat.recheck.interval设置为5000（毫秒），dfs.heartbeat.interval设置为3（秒，默认），则总的超时时间为40秒。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>heartbeat.recheck.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>2000<span class="tag">&lt;/<span class="name">value</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.heartbeat.interval<span class="tag">&lt;/<span class="name">name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="观察验证DATANODE功能"><a href="#观察验证DATANODE功能" class="headerlink" title="观察验证DATANODE功能"></a>观察验证DATANODE功能</h4><p>上传一个文件，观察文件的block具体的物理存放情况：<br>在每一台datanode机器上的这个目录中能找到文件的切块：<br>/home/hadoop/app/hadoop-2.7.3/tmp/dfs/data/current/BP-193442119-192.168.88.3-1432458743457/current/finalized</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">YB-Chi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/05/14/HDFS/">http://yoursite.com/2018/05/14/HDFS/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Bigdata/">Bigdata</a><a class="post-meta__tags" href="/tags/Hadoop/">Hadoop</a><a class="post-meta__tags" href="/tags/HDFS/">HDFS</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/05/14/Java8新特性/"><i class="fa fa-chevron-left">  </i><span>Java8新特性</span></a></div><div class="next-post pull-right"><a href="/2018/05/14/centos7安装mysql5.5.48/"><span>centos7安装mysql5.5.48</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2018 By YB-Chi</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.5.3"></script><script src="/js/fancybox.js?version=1.5.3"></script><script src="/js/sidebar.js?version=1.5.3"></script><script src="/js/copy.js?version=1.5.3"></script><script src="/js/fireworks.js?version=1.5.3"></script><script src="/js/transition.js?version=1.5.3"></script><script src="/js/scroll.js?version=1.5.3"></script><script src="/js/head.js?version=1.5.3"></script></body></html>
